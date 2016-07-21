@@ -3,7 +3,7 @@
 
 # JsonPathV2 - Origin
 
-This gem was forked, than re-written from this Gem: [JsonPath](https://github.com/joshbuddy/jsonpath). Since the original owner clearly abandoned that project, I took the liberty to fork it, and start fixing it. Please feel free to submit any issues you may encounter.
+This gem was forked, than re-written from this Gem: [JsonPath](https://github.com/joshbuddy/jsonpath). Since the original owner clearly abandoned that project, I took the liberty to fork it, and start fixing it. Please feel free to submit any issues you may encounter. PRs are very welcomed.
 
 # JsonPathV2
 
