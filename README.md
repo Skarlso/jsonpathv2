@@ -1,6 +1,10 @@
 # Travis Build
 [![Build Status](https://travis-ci.org/Skarlso/jsonpathv2.svg?branch=master)](https://travis-ci.org/Skarlso/jsonpathv2)
 
+# JsonPathV2 - Origin
+
+This gem was forked, than re-written from this Gem: [JsonPath](https://github.com/joshbuddy/jsonpath). Since the original owner clearly abandoned that project, I took the liberty to fork it, and start fixing it. Please feel free to submit any issues you may encounter.
+
 # JsonPathV2
 
 This is an implementation of http://goessner.net/articles/JsonPathV2/.
