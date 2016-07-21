@@ -13,7 +13,7 @@ end
 
 usage unless ARGV[0]
 
-jsonpathv2 = JsonPathV2.new(ARGV[0])
+jsonpathv2 = JsonPath.new(ARGV[0])
 case ARGV[1]
 when nil # stdin
   puts MultiJson.encode(jsonpathv2.on(MultiJson.decode(STDIN.read)))

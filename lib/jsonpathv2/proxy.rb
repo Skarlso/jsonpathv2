@@ -1,4 +1,4 @@
-class JsonPathV2
+class JsonPath
   class Proxy
     attr_reader :obj
     alias_method :to_hash, :obj
@@ -15,19 +15,19 @@ class JsonPathV2
       _gsub(@obj, path, replacement ? proc { replacement } : replacement_block)
     end
 
-    def delete(path = JsonPathV2::PATH_ALL)
+    def delete(path = JsonPath::PATH_ALL)
       _delete(_deep_copy, path)
     end
 
-    def delete!(path = JsonPathV2::PATH_ALL)
+    def delete!(path = JsonPath::PATH_ALL)
       _delete(@obj, path)
     end
 
-    def compact(path = JsonPathV2::PATH_ALL)
+    def compact(path = JsonPath::PATH_ALL)
       _compact(_deep_copy, path)
     end
 
-    def compact!(path = JsonPathV2::PATH_ALL)
+    def compact!(path = JsonPath::PATH_ALL)
       _compact(@obj, path)
     end
 
@@ -38,17 +38,17 @@ class JsonPathV2
     end
 
     def _gsub(obj, path, replacement)
-      JsonPathV2.new(path)[obj, :substitute].each(&replacement)
+      JsonPath.new(path)[obj, :substitute].each(&replacement)
       Proxy.new(obj)
     end
 
     def _delete(obj, path)
-      JsonPathV2.new(path)[obj, :delete].each
+      JsonPath.new(path)[obj, :delete].each
       Proxy.new(obj)
     end
 
     def _compact(obj, path)
-      JsonPathV2.new(path)[obj, :compact].each
+      JsonPath.new(path)[obj, :compact].each
       Proxy.new(obj)
     end
   end

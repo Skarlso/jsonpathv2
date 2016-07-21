@@ -1,17 +1,17 @@
 # Travis Build
 [![Build Status](https://travis-ci.org/Skarlso/jsonpathv2.svg?branch=master)](https://travis-ci.org/Skarlso/jsonpathv2)
 
-# JsonPathV2 - Origin
+# JsonPath - Origin
 
 This gem was forked, than re-written from this Gem: [JsonPath](https://github.com/joshbuddy/jsonpath). Since the original owner clearly abandoned that project, I took the liberty to fork it, and start fixing it. Please feel free to submit any issues you may encounter. PRs are very welcomed.
 
-# JsonPathV2
+# JsonPath
 
-This is an implementation of http://goessner.net/articles/JsonPathV2/.
+This is an implementation of http://goessner.net/articles/JsonPath/.
 
-## What is JsonPathV2?
+## What is JsonPath?
 
-JsonPathV2 is a way of addressing elements within a JSON object. Similar to xpath of yore, JsonPathV2 lets you
+JsonPath is a way of addressing elements within a JSON object. Similar to xpath of yore, JsonPath lets you
 traverse a json object and manipulate or access it.
 
 ## Usage
@@ -27,7 +27,7 @@ There is stand-alone usage through the binary `jsonpathv2`
 
 ### Library
 
-To use JsonPathV2 as a library simply include and get goin'!
+To use JsonPath as a library simply include and get goin'!
 
 ~~~~~ {ruby}
 require 'jsonpathv2'
@@ -51,7 +51,7 @@ Now that we have a JSON object, let's get all the prices present in the object. 
 in the following way.
 
 ~~~~~ {ruby}
-path = JsonPathV2.new('$..price')
+path = JsonPath.new('$..price')
 ~~~~~
 
 Now that we have a path, let's apply it to the object above.
@@ -68,17 +68,17 @@ path.on('{"books":[{"title":"A Tale of Two Somethings","price":18.88}]}')
 # => [18.88]
 ~~~~~
 
-You can also just combine this into one mega-call with the convenient `JsonPathV2.on` method.
+You can also just combine this into one mega-call with the convenient `JsonPath.on` method.
 
 ~~~~~ {ruby}
-JsonPathV2.on(json, '$..author')
+JsonPath.on(json, '$..author')
 # => ["Nigel Rees", "Evelyn Waugh", "Herman Melville", "Tolkien"]
 ~~~~~
 
-Of course the full JsonPathV2 syntax is supported, such as array slices
+Of course the full JsonPath syntax is supported, such as array slices
 
 ~~~~~ {ruby}
-JsonPathV2.new('$..book[::2]').on(json)
+JsonPath.new('$..book[::2]').on(json)
 # => [
 #      {"price"=>8.95, "category"=>"reference", "author"=>"Nigel Rees", "title"=>"Sayings of the Century"},
 #      {"price"=>8.99, "category"=>"fiction", "author"=>"Herman Melville", "title"=>"Moby Dick", "isbn"=>"0-553-21311-3"}
@@ -88,22 +88,22 @@ JsonPathV2.new('$..book[::2]').on(json)
 ...and evals.
 
 ~~~~~ {ruby}
-JsonPathV2.new('$..price[?(@ < 10)]').on(json)
+JsonPath.new('$..price[?(@ < 10)]').on(json)
 # => [8.95, 8.99]
 ~~~~~
 
 There is a convenience method, `#first` that gives you the first element for a JSON object and path.
 
 ~~~~~ {ruby}
-JsonPathV2.new('$..color').first(object)
+JsonPath.new('$..color').first(object)
 # => "red"
 ~~~~~
 
 As well, we can directly create an `Enumerable` at any time using `#[]`.
 
 ~~~~~ {ruby}
-enum = JsonPathV2.new('$..color')[object]
-# => #<JsonPathV2::Enumerable:...>
+enum = JsonPath.new('$..color')[object]
+# => #<JsonPath::Enumerable:...>
 enum.first
 # => "red"
 enum.any?{ |c| c == 'red' }
@@ -117,7 +117,7 @@ You can optionally prevent eval from being called on sub-expressions by passing 
 If you'd like to do substitution in a json object, you can use `#gsub` or `#gsub!` to modify the object in place.
 
 ~~~~~ {ruby}
-JsonPathV2.for('{"candy":"lollipop"}').gsub('$..candy') {|v| "big turks" }.to_hash
+JsonPath.for('{"candy":"lollipop"}').gsub('$..candy') {|v| "big turks" }.to_hash
 ~~~~~
 
 The result will be
@@ -130,7 +130,7 @@ If you'd like to remove all nil keys, you can use `#compact` and `#compact!`. To
 
 ~~~~~ {ruby}
 json = '{"candy":"lollipop","noncandy":null,"other":"things"}'
-o = JsonPathV2.for(json).
+o = JsonPath.for(json).
   gsub('$..candy') {|v| "big turks" }.
   compact.
   delete('$..other').

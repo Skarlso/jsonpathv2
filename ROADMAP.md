@@ -1,4 +1,4 @@
-Roadmap for JsonPathV2
+Roadmap for JsonPath
 ====================
 
 

@@ -1,7 +1,9 @@
 before_install:
   - gem update --system 2.3.0
 rvm:
-  - 1.9.3
+  # Disabling 1.9.3 build for now, until the issue with the
+  # native json gem is fixed.
+  # - 1.9.3
   - 2.0.0
   - 2.1.6
   - 2.3.1

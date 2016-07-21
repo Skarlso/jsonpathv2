@@ -4,12 +4,12 @@ require File.join(File.dirname(__FILE__), 'lib', 'jsonpathv2', 'version')
 
 Gem::Specification.new do |s|
   s.name = 'jsonpathv2'
-  s.version = JsonPathV2::VERSION
+  s.version = JsonPath::VERSION
   s.required_rubygems_version =
     Gem::Requirement.new('>= 0') if s.respond_to? :required_rubygems_version=
   s.authors = ['Gergely Brautigam']
-  s.summary = 'Ruby implementation of http://goessner.net/articles/JsonPathV2/'
-  s.description = 'Ruby implementation of http://goessner.net/articles/JsonPathV2/.'
+  s.summary = 'Ruby implementation of http://goessner.net/articles/JsonPath/'
+  s.description = 'Ruby implementation of http://goessner.net/articles/JsonPath/.'
   s.email = 'skarlso777@gmail.com'
   s.extra_rdoc_files = ['README.md']
   s.files = `git ls-files`.split("\n")

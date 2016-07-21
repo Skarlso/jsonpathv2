@@ -4,7 +4,7 @@ require 'jsonpathv2/proxy'
 require 'jsonpathv2/enumerable'
 require 'jsonpathv2/version'
 
-class JsonPathV2
+class JsonPath
   PATH_ALL = '$..*'.freeze
 
   attr_accessor :path
@@ -54,7 +54,7 @@ class JsonPathV2
 
   def join(join_path)
     res = deep_clone
-    res.path += JsonPathV2.new(join_path).path
+    res.path += JsonPath.new(join_path).path
     res
   end
 
@@ -67,7 +67,7 @@ class JsonPathV2
   end
 
   def enum_on(obj_or_str, mode = nil)
-    JsonPathV2::Enumerable.new(self, self.class.process_object(obj_or_str), mode,
+    JsonPath::Enumerable.new(self, self.class.process_object(obj_or_str), mode,
                              @opts)
   end
   alias_method :[], :enum_on

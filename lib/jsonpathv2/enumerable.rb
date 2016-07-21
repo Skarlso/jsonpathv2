@@ -1,4 +1,4 @@
-class JsonPathV2
+class JsonPath
   class Enumerable
     include ::Enumerable
     attr_reader :allow_eval
