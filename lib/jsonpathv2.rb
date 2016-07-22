@@ -4,6 +4,8 @@ require 'jsonpathv2/proxy'
 require 'jsonpathv2/enumerable'
 require 'jsonpathv2/version'
 
+# JsonPath: initializes the class with a given JsonPath and parses that path
+# into a token array.
 class JsonPath
   PATH_ALL = '$..*'.freeze
 
