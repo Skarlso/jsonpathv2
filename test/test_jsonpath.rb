@@ -1,17 +1,12 @@
 class TestJsonpath < MiniTest::Unit::TestCase
-
   def setup
     @object = example_object
     @object2 = example_object
   end
 
   def test_bracket_matching
-    assert_raises(ArgumentError) {
-      JsonPath.new('$.store.book[0')
-    }
-    assert_raises(ArgumentError) {
-      JsonPath.new('$.store.book[0]]')
-    }
+    assert_raises(ArgumentError) { JsonPath.new('$.store.book[0') }
+    assert_raises(ArgumentError) { JsonPath.new('$.store.book[0]]') }
     assert_equal [9], JsonPath.new('$.store.book[0].price').on(@object)
   end
 
@@ -67,12 +62,12 @@ class TestJsonpath < MiniTest::Unit::TestCase
 
   if RUBY_VERSION[/^1\.9/]
     def test_recognize_filters_on_val
-      assert_equal [@object['store']['book'][1]['price'], @object['store']['book'][3]['price'], @object['store']['bicycle']['price']], JsonPath.new("$..price[?(@ > 10)]").on(@object)
+      assert_equal [@object['store']['book'][1]['price'], @object['store']['book'][3]['price'], @object['store']['bicycle']['price']], JsonPath.new('$..price[?(@ > 10)]').on(@object)
     end
   end
 
   def test_no_eval
-    assert_equal [], JsonPath.new('$..book[(@.length-2)]', :allow_eval => false).on(@object)
+    assert_equal [], JsonPath.new('$..book[(@.length-2)]', allow_eval: false).on(@object)
   end
 
   def test_paths_with_underscores
@@ -100,7 +95,7 @@ class TestJsonpath < MiniTest::Unit::TestCase
   end
 
   def test_space_in_path
-    assert_equal ['e'], JsonPath.new("$.'c d'").on({"a" => "a","b" => "b", "c d" => "e"})
+    assert_equal ['e'], JsonPath.new("$.'c d'").on('a' => 'a', 'b' => 'b', 'c d' => 'e')
   end
 
   def test_class_method
@@ -130,57 +125,57 @@ class TestJsonpath < MiniTest::Unit::TestCase
   end
 
   def test_weird_gsub!
-    h = {'hi' => 'there'}
-    JsonPath.for(@object).gsub!('$.*') { |n| h }
+    h = { 'hi' => 'there' }
+    JsonPath.for(@object).gsub!('$.*') { |_| h }
     assert_equal h, @object
   end
 
   def test_compact
-    h = {'hi' => 'there', 'you' => nil}
+    h = { 'hi' => 'there', 'you' => nil }
     JsonPath.for(h).compact!
-    assert_equal({'hi' => 'there'}, h)
+    assert_equal({ 'hi' => 'there' }, h)
   end
 
   def test_delete
-    h = {'hi' => 'there', 'you' => nil}
+    h = { 'hi' => 'there', 'you' => nil }
     JsonPath.for(h).delete!('*.hi')
-    assert_equal({'you' => nil}, h)
+    assert_equal({ 'you' => nil }, h)
   end
 
   def test_wildcard
-    assert_equal @object['store']['book'].collect{|e| e['price']}.compact, JsonPath.on(@object, '$..book[*].price')
+    assert_equal @object['store']['book'].collect { |e| e['price'] }.compact, JsonPath.on(@object, '$..book[*].price')
   end
 
   def test_wildcard_empty_array
-    object = @object.merge("bicycle" => { "tire" => [] })
-    assert_equal [], JsonPath.on(object, "$..bicycle.tire[*]")
+    object = @object.merge('bicycle' => { 'tire' => [] })
+    assert_equal [], JsonPath.on(object, '$..bicycle.tire[*]')
   end
 
   def test_support_filter_by_array_childnode_value
-    assert_equal [@object['store']['book'][3]], JsonPath.new("$..book[?(@.price > 20)]").on(@object)
+    assert_equal [@object['store']['book'][3]], JsonPath.new('$..book[?(@.price > 20)]').on(@object)
   end
 
   def test_support_filter_by_childnode_value_with_inconsistent_children
-    @object['store']['book'][0] = "string_instead_of_object"
-    assert_equal [@object['store']['book'][3]], JsonPath.new("$..book[?(@.price > 20)]").on(@object)
+    @object['store']['book'][0] = 'string_instead_of_object'
+    assert_equal [@object['store']['book'][3]], JsonPath.new('$..book[?(@.price > 20)]').on(@object)
   end
 
   def test_support_filter_by_childnode_value_and_select_child_key
-    assert_equal [23], JsonPath.new("$..book[?(@.price > 20)].price").on(@object)
+    assert_equal [23], JsonPath.new('$..book[?(@.price > 20)].price').on(@object)
   end
 
   def test_support_filter_by_childnode_value_over_childnode_and_select_child_key
-    assert_equal ["Osennie Vizity"], JsonPath.new("$..book[?(@.written.year == 1996)].title").on(@object)
+    assert_equal ['Osennie Vizity'], JsonPath.new('$..book[?(@.written.year == 1996)].title').on(@object)
   end
 
   def test_support_filter_by_object_childnode_value
     data = {
-      "data" => {
-        "type" => "users",
-        "id" => "123"
+      'data' => {
+        'type' => 'users',
+        'id' => '123'
       }
     }
-    assert_equal [{"type"=>"users", "id"=>"123"}], JsonPath.new("$.data[?(@.type == 'users')]").on(data)
+    assert_equal [{ 'type' => 'users', 'id' => '123' }], JsonPath.new("$.data[?(@.type == 'users')]").on(data)
     assert_equal [], JsonPath.new("$.data[?(@.type == 'admins')]").on(data)
   end
 

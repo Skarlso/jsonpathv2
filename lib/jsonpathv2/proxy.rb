@@ -1,7 +1,7 @@
 class JsonPath
   class Proxy
     attr_reader :obj
-    alias_method :to_hash, :obj
+    alias to_hash obj
 
     def initialize(obj)
       @obj = obj

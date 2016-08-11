@@ -76,9 +76,7 @@ class JsonPath
         end
       else
         if pos == (@path.size - 1) && node && allow_eval?
-          if eval("node #{@path[pos]}")
-            yield_value(blk, context, key)
-          end
+          yield_value(blk, context, key) if eval("node #{@path[pos]}")
         end
       end
 
