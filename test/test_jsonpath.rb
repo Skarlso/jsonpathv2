@@ -130,6 +130,10 @@ class TestJsonpath < MiniTest::Unit::TestCase
     assert_equal h, @object
   end
 
+  def test_where_selector
+    JsonPath.for(@object).gsub!('$..book.price[?(@ > 20)]') { |p| p + 10 }
+  end
+
   def test_compact
     h = { 'hi' => 'there', 'you' => nil }
     JsonPath.for(h).compact!
@@ -144,6 +148,18 @@ class TestJsonpath < MiniTest::Unit::TestCase
 
   def test_wildcard
     assert_equal @object['store']['book'].collect { |e| e['price'] }.compact, JsonPath.on(@object, '$..book[*].price')
+  end
+
+  def test_wildcard_on_intermediary_element
+    assert_equal [1], JsonPath.on({ 'a' => { 'b' => { 'c' => 1 } } }, '$.a..c')
+  end
+
+  def test_wildcard_on_intermediary_element_v2
+    assert_equal [1], JsonPath.on({ 'a' => { 'b' => { 'd' => { 'c' => 1 } } } }, '$.a..c')
+  end
+
+  def test_wildcard_on_intermediary_element_v3
+    assert_equal [1], JsonPath.on({ 'a' => { 'b' => { 'd' => { 'c' => 1 } } } }, '$.a.*..c')
   end
 
   def test_wildcard_empty_array
