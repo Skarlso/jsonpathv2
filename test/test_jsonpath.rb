@@ -130,6 +130,12 @@ class TestJsonpath < MiniTest::Unit::TestCase
     assert_equal h, @object
   end
 
+  def test_gsub_to_false!
+    h = { 'hi' => 'there' }
+    h2 = { 'hi' => false }
+    assert_equal h2, JsonPath.for(h).gsub!('$.hi') { |_| false }.to_hash
+  end
+
   def test_where_selector
     JsonPath.for(@object).gsub!('$..book.price[?(@ > 20)]') { |p| p + 10 }
   end
