@@ -26,54 +26,7 @@ class JsonPath
       when '$'
         each(context, key, pos + 1, &blk) if node == @object
       when /^\[(.*)\]$/
-        expr[1, expr.size - 2].split(',').each do |sub_path|
-          case sub_path[0]
-          when '\'', '"'
-            if node.is_a?(Hash)
-              k = sub_path[1, sub_path.size - 2]
-              each(node, k, pos + 1, &blk) if node.key?(k)
-            end
-          when '?'
-            raise 'Cannot use ?(...) unless eval is enabled' unless allow_eval?
-            case node
-            when Array
-              node.size.times do |index|
-                @_current_node = node[index]
-                if process_function_or_literal(sub_path[1, sub_path.size - 1])
-                  each(@_current_node, nil, pos + 1, &blk)
-                end
-              end
-            when Hash
-              if process_function_or_literal(sub_path[1, sub_path.size - 1])
-                each(@_current_node, nil, pos + 1, &blk)
-              end
-            else
-              yield node if process_function_or_literal(sub_path[1, sub_path.size - 1])
-            end
-          else
-            if node.is_a?(Array)
-              next if node.empty?
-              array_args = sub_path.split(':')
-              if array_args[0] == '*'
-                start_idx = 0
-                end_idx = node.size - 1
-              else
-                start_idx = process_function_or_literal(array_args[0], 0)
-                next unless start_idx
-                end_idx = (array_args[1] && process_function_or_literal(array_args[1], -1) || (sub_path.count(':') == 0 ? start_idx : -1))
-                next unless end_idx
-                if start_idx == end_idx
-                  next unless start_idx < node.size
-                end
-              end
-              start_idx %= node.size
-              end_idx %= node.size
-              step = process_function_or_literal(array_args[2], 1)
-              next unless step
-              (start_idx..end_idx).step(step) { |i| each(node, i, pos + 1, &blk) }
-            end
-          end
-        end
+        handle_wildecard(node, expr, context, key, pos, &blk)
       else
         if pos == (@path.size - 1) && node && allow_eval?
           yield_value(blk, context, key) if eval("node #{@path[pos]}")
@@ -89,6 +42,59 @@ class JsonPath
     end
 
     private
+
+    def handle_wildecard(node, expr, context, key, pos, &blk)
+      expr[1, expr.size - 2].split(',').each do |sub_path|
+        case sub_path[0]
+        when '\'', '"'
+          if node.is_a?(Hash)
+            k = sub_path[1, sub_path.size - 2]
+            each(node, k, pos + 1, &blk) if node.key?(k)
+          end
+        when '?'
+          handle_question_mark(sub_path, node, pos, &blk)
+        else
+          next unless node.is_a?(Array) && !node.empty?
+          array_args = sub_path.split(':')
+          if array_args[0] == '*'
+            start_idx = 0
+            end_idx = node.size - 1
+          else
+            start_idx = process_function_or_literal(array_args[0], 0)
+            next unless start_idx
+            end_idx = (array_args[1] && process_function_or_literal(array_args[1], -1) || (sub_path.count(':') == 0 ? start_idx : -1))
+            next unless end_idx
+            if start_idx == end_idx
+              next unless start_idx < node.size
+            end
+          end
+          start_idx %= node.size
+          end_idx %= node.size
+          step = process_function_or_literal(array_args[2], 1)
+          next unless step
+          (start_idx..end_idx).step(step) { |i| each(node, i, pos + 1, &blk) }
+        end
+      end
+    end
+
+    def handle_question_mark(sub_path, node, pos, &blk)
+      raise 'Cannot use ?(...) unless eval is enabled' unless allow_eval?
+      case node
+      when Array
+        node.size.times do |index|
+          @_current_node = node[index]
+          if process_function_or_literal(sub_path[1, sub_path.size - 1])
+            each(@_current_node, nil, pos + 1, &blk)
+          end
+        end
+      when Hash
+        if process_function_or_literal(sub_path[1, sub_path.size - 1])
+          each(@_current_node, nil, pos + 1, &blk)
+        end
+      else
+        yield node if process_function_or_literal(sub_path[1, sub_path.size - 1])
+      end
+    end
 
     def yield_value(blk, context, key)
       case @mode
