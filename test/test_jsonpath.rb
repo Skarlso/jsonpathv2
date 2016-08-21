@@ -146,6 +146,16 @@ class TestJsonpath < MiniTest::Unit::TestCase
     assert_equal({ 'you' => nil }, h)
   end
 
+  def test_at_sign_in_json_element
+    data =
+      { '@colors' =>
+      [{ '@r' => 255, '@g' => 0, '@b' => 0 },
+       { '@r' => 0, '@g' => 255, '@b' => 0 },
+       { '@r' => 0, '@g' => 0, '@b' => 255 }] }
+
+    assert_equal [255, 0, 0], JsonPath.on(data, '$..@r')
+  end
+
   def test_wildcard
     assert_equal @object['store']['book'].collect { |e| e['price'] }.compact, JsonPath.on(@object, '$..book[*].price')
   end
