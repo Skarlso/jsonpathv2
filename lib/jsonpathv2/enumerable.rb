@@ -47,10 +47,9 @@ class JsonPath
       expr[1, expr.size - 2].split(',').each do |sub_path|
         case sub_path[0]
         when '\'', '"'
-          if node.is_a?(Hash)
-            k = sub_path[1, sub_path.size - 2]
-            each(node, k, pos + 1, &blk) if node.key?(k)
-          end
+          next unless node.is_a?(Hash)
+          k = sub_path[1, sub_path.size - 2]
+          each(node, k, pos + 1, &blk) if node.key?(k)
         when '?'
           handle_question_mark(sub_path, node, pos, &blk)
         else
@@ -64,9 +63,7 @@ class JsonPath
             next unless start_idx
             end_idx = (array_args[1] && process_function_or_literal(array_args[1], -1) || (sub_path.count(':') == 0 ? start_idx : -1))
             next unless end_idx
-            if start_idx == end_idx
-              next unless start_idx < node.size
-            end
+            next if start_idx == end_idx && start_idx > node.size
           end
           start_idx %= node.size
           end_idx %= node.size
