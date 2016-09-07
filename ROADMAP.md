@@ -1,6 +1,9 @@
 Roadmap for JsonPath
 ====================
 
+*0.1.0*
+
+  * Get rid of eval. Or replace it with something sensible. 
 
 *0.0.3*
 -------
