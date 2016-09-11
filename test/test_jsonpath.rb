@@ -166,6 +166,14 @@ class TestJsonpath < MiniTest::Unit::TestCase
     assert_equal @object['store']['book'].collect { |e| e['price'] }.compact, JsonPath.on(@object, '$..book[*].price')
   end
 
+  def test_wildcard_all_elements
+    assert_equal @object['store']['book'].compact, JsonPath.on(@object, '$..book.*').first
+  end
+
+  def test_wildcard_all_elements2
+    assert_equal @object, JsonPath.on(@object, '$..*').first
+  end
+
   def test_wildcard_on_intermediary_element
     assert_equal [1], JsonPath.on({ 'a' => { 'b' => { 'c' => 1 } } }, '$.a..c')
   end
