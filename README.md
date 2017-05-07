@@ -1,3 +1,8 @@
+# DEPRECATED
+
+Hi. This Gem will be deprecated in favour of it's parent gem which it was aiming to enhance. I've been given collaboration rights
+to [JsonPath](https://github.com/joshbuddy/jsonpath) and thus will stop maintaining a duplicate of it. Thanks!
+
 # Travis Build
 [![Build Status](https://travis-ci.org/Skarlso/jsonpathv2.svg?branch=master)](https://travis-ci.org/Skarlso/jsonpathv2)
 
