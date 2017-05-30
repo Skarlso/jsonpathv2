@@ -182,6 +182,18 @@ class TestJsonpath < MiniTest::Unit::TestCase
     assert_equal [1], JsonPath.on({ 'a' => { 'b' => { 'd' => { 'c' => 1 } } } }, '$.a.*..c')
   end
 
+  def test_wildcard_on_intermediary_element_v4
+    assert_equal [1], JsonPath.on({ 'a' => { 'b' => { 'd' => { 'c' => 1 } } } }, '$.a.*..c')
+  end
+
+  def test_wildcard_on_intermediary_element_v5
+    assert_equal [1], JsonPath.on({ 'a' => { 'b' => { 'c' => 1 } } }, '$.a.*.c')
+  end
+
+  def test_wildcard_on_intermediary_element_v6
+    assert_equal ['red'], JsonPath.new('$.store.*.color').on(@object)
+  end
+
   def test_wildcard_empty_array
     object = @object.merge('bicycle' => { 'tire' => [] })
     assert_equal [], JsonPath.on(object, '$..bicycle.tire[*]')
